@@ -1,0 +1,7 @@
+name: Siege
+version: @version@
+main: me.darkeyedragon.siege.Siege
+api-version: 1.13
+prefix: Siege
+authors: [DarkEyeDragon]
+description: Siege plugin
