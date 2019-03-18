@@ -11,7 +11,7 @@ public class PlayerJoin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
         Player p = event.getPlayer();
-        //DatabaseController
+        DatabaseController.insertPlayer(p);
     }
 
 }
