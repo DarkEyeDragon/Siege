@@ -5,6 +5,7 @@ import me.darkeyedragon.siege.command.GuildCommand;
 import me.darkeyedragon.siege.command.SiegeCommand;
 import me.darkeyedragon.siege.database.DatabaseSetup;
 import me.darkeyedragon.siege.event.PlayerJoin;
+import me.darkeyedragon.siege.event.PlayerLeave;
 import me.darkeyedragon.siege.guild.Guild;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,7 +29,8 @@ public final class Siege extends JavaPlugin {
         commandManager.enableUnstableAPI("help");
         commandManager.registerCommand(new SiegeCommand());
         commandManager.registerCommand(new GuildCommand());
-        getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerLeave(this), this);
         try {
             if(DatabaseSetup.databaseExists()){
                 getLogger().info("Database found. Proceeding...");
@@ -39,7 +41,7 @@ public final class Siege extends JavaPlugin {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            getLogger().severe("We done fucked up bois. Shutting down to prevent corruption...");
+            getLogger().severe("Can't contact database. Disabling siege...");
             this.getPluginLoader().disablePlugin(this);
         }
     }
@@ -60,4 +62,6 @@ public final class Siege extends JavaPlugin {
     public static ExecutorService getExecutorService() {
         return executorService;
     }
+
+
 }
