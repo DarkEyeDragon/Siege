@@ -16,17 +16,19 @@ public class DatabaseSetup {
         }
     }
 
-    /**
-     * Create the database tables. It is expected for the database to exist. Otherwise the plugin will exit.
-     * @throws SQLException
+    /***
+     *
+     * @throws SQLException thrown when the tables can't be created.
+     * Likely caused by insufficient access privileges or non existent database
      */
     public static void createTables() throws SQLException {
 
         String guild = ""
                 + "CREATE TABLE IF NOT EXISTS `guild` ( "
                 + "  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY , "
-                + "  `name` varchar(16) NOT NULL UNIQUE , "
-                + "  `member` varchar(16) NOT NULL "
+                + "  `name` varchar(16) NOT NULL UNIQUE, "
+                + "  `balance` BIGINT DEFAULT 0, "
+                + "  `date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
                 + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 
         String user = ""
@@ -44,9 +46,6 @@ public class DatabaseSetup {
                 + " FOREIGN KEY (uuid) REFERENCES user(uuid),"
                 + " FOREIGN KEY (guild_id) REFERENCES guild(id)"
                 + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
-
-
-
 
 
         try (Connection connection = DataSource.getConnection()) {

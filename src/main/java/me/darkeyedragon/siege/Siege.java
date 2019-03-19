@@ -28,7 +28,7 @@ public final class Siege extends JavaPlugin {
         commandManager = new PaperCommandManager(this);
         commandManager.enableUnstableAPI("help");
         commandManager.registerCommand(new SiegeCommand());
-        commandManager.registerCommand(new GuildCommand());
+        commandManager.registerCommand(new GuildCommand(this));
         getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
         getServer().getPluginManager().registerEvents(new PlayerLeave(this), this);
         try {
