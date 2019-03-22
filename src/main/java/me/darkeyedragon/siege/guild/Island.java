@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.UUID;
 
-public class Guild {
+public class Island {
     private String name;
     private List<UUID> members;
     private int balance;

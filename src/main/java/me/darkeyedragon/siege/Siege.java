@@ -1,12 +1,12 @@
 package me.darkeyedragon.siege;
 
 import co.aikar.commands.PaperCommandManager;
-import me.darkeyedragon.siege.command.GuildCommand;
+import me.darkeyedragon.siege.command.IslandCommand;
 import me.darkeyedragon.siege.command.SiegeCommand;
 import me.darkeyedragon.siege.database.DatabaseSetup;
 import me.darkeyedragon.siege.event.PlayerJoin;
 import me.darkeyedragon.siege.event.PlayerLeave;
-import me.darkeyedragon.siege.guild.Guild;
+import me.darkeyedragon.siege.guild.Island;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
@@ -17,18 +17,19 @@ import java.util.concurrent.Executors;
 public final class Siege extends JavaPlugin {
 
     private static ExecutorService executorService;
-    private static HashSet<Guild> guilds;
+    private static HashSet<Island> islands;
 
     private PaperCommandManager commandManager;
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onEnable() {
-        guilds = new HashSet<>();
+        islands = new HashSet<>();
         executorService = Executors.newFixedThreadPool(10);
         commandManager = new PaperCommandManager(this);
         commandManager.enableUnstableAPI("help");
         commandManager.registerCommand(new SiegeCommand());
-        commandManager.registerCommand(new GuildCommand(this));
+        commandManager.registerCommand(new IslandCommand(this));
         getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
         getServer().getPluginManager().registerEvents(new PlayerLeave(this), this);
         try {
@@ -55,8 +56,8 @@ public final class Siege extends JavaPlugin {
         return commandManager;
     }
 
-    public static HashSet<Guild> getGuilds() {
-        return guilds;
+    public static HashSet<Island> getIslands() {
+        return islands;
     }
 
     public static ExecutorService getExecutorService() {

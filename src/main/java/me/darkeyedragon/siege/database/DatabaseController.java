@@ -1,7 +1,7 @@
 package me.darkeyedragon.siege.database;
 
 import me.darkeyedragon.siege.Siege;
-import me.darkeyedragon.siege.guild.Guild;
+import me.darkeyedragon.siege.guild.Island;
 import me.darkeyedragon.siege.util.UUIDConverter;
 import org.bukkit.entity.Player;
 
@@ -33,17 +33,17 @@ public class DatabaseController {
         }, Siege.getExecutorService());
     }
 
-    public static CompletableFuture<Boolean> insertGuild(Guild guild, Logger logger) {
+    public static CompletableFuture<Boolean> insertGuild(Island island, Logger logger) {
         return CompletableFuture.supplyAsync(() -> {
             String insertGuildQuery = "INSERT INTO guild (name) VALUES (?);";
             try (Connection connection = DataSource.getConnection()) {
                 PreparedStatement statement = connection.prepareStatement(insertGuildQuery);
-                statement.setString(1, guild.getName());
-                logger.info(guild.getOwner().getName() + " created new guild named " + guild.getName());
+                statement.setString(1, island.getName());
+                logger.info(island.getOwner().getName() + " created new island named " + island.getName());
                 statement.execute();
                 return true;
             } catch (SQLException ex) {
-                logger.info("Unable to create guild for " + guild.getOwner().getName());
+                logger.info("Unable to create island for " + island.getOwner().getName());
                 return false;
             }
         }, Siege.getExecutorService());
