@@ -4,32 +4,24 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
 import me.darkeyedragon.siege.database.DatabaseController;
-import me.darkeyedragon.siege.guild.Island;
-import org.bukkit.Bukkit;
+import me.darkeyedragon.siege.island.Island;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-@CommandAlias("guild")
+@CommandAlias("island")
 public class IslandCommand extends BaseCommand {
-
-    private JavaPlugin plugin;
-
-    public IslandCommand(JavaPlugin plugin) {
-        this.plugin = plugin;
-    }
 
     @Subcommand("list")
     @Description("List all islands")
-    public void list(Player player, @Single int page){
-        CompletableFuture<List<String>> guildsFuture = DatabaseController.getGuilds();
-        guildsFuture.thenAccept(list->{
-            int pages = 1+(int)Math.ceil(list.size()/18);
-            player.sendMessage(ChatColor.YELLOW+"======= "+ChatColor.AQUA+" Guilds (1/"+pages+")"+ChatColor.YELLOW+" =======");
+    public void list(Player player, @Optional String[] args) {
+        CompletableFuture<List<String>> islandFuture = DatabaseController.getIslands();
+        islandFuture.thenAccept(list -> {
+            int pages = 1 + (int) Math.ceil(list.size() / 18);
+            player.sendMessage(ChatColor.YELLOW + "======= " + ChatColor.AQUA + " Islands (1/" + pages + ")" + ChatColor.YELLOW + " =======");
             for (String s : list) {
                 player.sendMessage(s);
             }
@@ -38,14 +30,14 @@ public class IslandCommand extends BaseCommand {
 
     @Subcommand("create")
     @Description("Create an island")
-    public void createGuild(Player player,@Single String name) {
-        CompletableFuture<Boolean> future = DatabaseController.isInGuild(player);
-        future.thenAccept(inGuild -> {
-            if (!inGuild) {
+    public void createIsland(Player player, @Single String name) {
+        CompletableFuture<Boolean> future = DatabaseController.isInIsland(player);
+        future.thenAccept(inIsland -> {
+            if (!inIsland) {
                 Island island = new Island();
                 island.setOwner(player);
                 island.setName(name);
-                CompletableFuture<Boolean> created = DatabaseController.insertGuild(island, plugin.getLogger());
+                CompletableFuture<Boolean> created = DatabaseController.insertIsland(island);
                 created.thenAccept(isCreated -> {
                     if (isCreated) {
                         player.sendMessage(ChatColor.GREEN + "Your island has been created.");
@@ -56,16 +48,33 @@ public class IslandCommand extends BaseCommand {
                 });
             } else {
                 player.sendMessage(
-                        ChatColor.RED + "You already are in a guild! Leave first before leaving");
+                        ChatColor.RED + "You already are in a island! Leave first before leaving");
             }
         });
     }
 
     @Subcommand("invite")
-    @Description("Invite an online player to your island. ")
-    public void invite(Player player, String target) {
-        Player targetP = Bukkit.getPlayer(target);
-        //targetP.sendMessage("You have been invited to join "+guildName);
+    @Description("Invite an online player to your island.")
+    public void invite(Player player, Player target) {
+        CompletableFuture<Island> island = DatabaseController.getIsland(player.getUniqueId());
+        if(player.getName().equalsIgnoreCase(target.getName())){
+            player.sendMessage(ChatColor.RED+"You can't invite yourself you silly goose!");
+            return;
+        }
+        island.thenAccept(islandObj -> {
+            if (islandObj != null) {
+                player.sendMessage(ChatColor.GREEN + "You have invited " + target.getName() + " to join " + islandObj.getName());
+                target.sendMessage(ChatColor.GREEN + "You have been invited to join " + islandObj.getName());
+            } else {
+                player.sendMessage(ChatColor.RED + "You can't invite while not in a guild!");
+            }
+        });
+    }
+
+    @Subcommand("kick")
+    @Description("Kick a player from your island")
+    public void kick(Player player, Player target){
+
     }
 
     @HelpCommand

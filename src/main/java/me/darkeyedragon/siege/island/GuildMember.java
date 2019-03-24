@@ -1,4 +1,4 @@
-package me.darkeyedragon.siege.guild;
+package me.darkeyedragon.siege.island;
 
 import java.util.UUID;
 

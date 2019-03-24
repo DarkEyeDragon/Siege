@@ -1,7 +1,8 @@
-package me.darkeyedragon.siege.guild;
+package me.darkeyedragon.siege.island;
 
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,6 +11,20 @@ public class Island {
     private List<UUID> members;
     private int balance;
     private Player owner;
+    private int id;
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Island(){
+        members = new ArrayList<>();
+    }
 
     public Player getOwner() {
         return owner;

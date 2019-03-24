@@ -6,7 +6,7 @@ import me.darkeyedragon.siege.command.SiegeCommand;
 import me.darkeyedragon.siege.database.DatabaseSetup;
 import me.darkeyedragon.siege.event.PlayerJoin;
 import me.darkeyedragon.siege.event.PlayerLeave;
-import me.darkeyedragon.siege.guild.Island;
+import me.darkeyedragon.siege.island.Island;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
@@ -29,9 +29,9 @@ public final class Siege extends JavaPlugin {
         commandManager = new PaperCommandManager(this);
         commandManager.enableUnstableAPI("help");
         commandManager.registerCommand(new SiegeCommand());
-        commandManager.registerCommand(new IslandCommand(this));
+        commandManager.registerCommand(new IslandCommand());
         getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerLeave(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerLeave(), this);
         try {
             if(DatabaseSetup.databaseExists()){
                 getLogger().info("Database found. Proceeding...");

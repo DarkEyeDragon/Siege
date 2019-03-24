@@ -1,6 +1,5 @@
-package me.darkeyedragon.siege.guild;
+package me.darkeyedragon.siege.island;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public interface IDatabaseSerializable {

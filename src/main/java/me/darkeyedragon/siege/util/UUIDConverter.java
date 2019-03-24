@@ -14,4 +14,11 @@ public class UUIDConverter {
                 .putLong(uuid.getLeastSignificantBits());
         return uuidBytes;
     }
+
+    public static UUID fromBytes(byte[] bytes){
+        ByteBuffer bb = ByteBuffer.wrap(bytes);
+        long high = bb.getLong();
+        long low = bb.getLong();
+        return new UUID(high, low);
+    }
 }

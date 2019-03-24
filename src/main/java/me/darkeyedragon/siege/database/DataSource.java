@@ -10,7 +10,7 @@ class DataSource {
 
     private static HikariConfig config = new HikariConfig();
     private static HikariDataSource ds;
-    static final String TABLE_NAME = "guilds";
+    static final String TABLE_NAME = "islands";
     static final String JDBC_URL = "jdbc:mysql://localhost:3306/";
     static{
         config.setJdbcUrl(JDBC_URL+TABLE_NAME);

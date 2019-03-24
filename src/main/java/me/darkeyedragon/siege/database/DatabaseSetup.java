@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class DatabaseSetup {
 
     public static boolean databaseExists() throws SQLException {
-        String existsQuery = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'guilds'";
+        String existsQuery = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'islands'";
         try (Connection connection = DataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(existsQuery);
             ResultSet resultSet = statement.executeQuery();
@@ -23,8 +23,8 @@ public class DatabaseSetup {
      */
     public static void createTables() throws SQLException {
 
-        String guild = ""
-                + "CREATE TABLE IF NOT EXISTS `guild` ( "
+        String island = ""
+                + "CREATE TABLE IF NOT EXISTS `island` ( "
                 + "  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY , "
                 + "  `name` varchar(16) NOT NULL UNIQUE, "
                 + "  `balance` BIGINT DEFAULT 0, "
@@ -38,22 +38,33 @@ public class DatabaseSetup {
                 + "  `last_join` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
                 + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 
-        String guildMember = ""
-                + "CREATE TABLE IF NOT EXISTS `guild_member` ( "
+        String islandMember = ""
+                + "CREATE TABLE IF NOT EXISTS `island_member` ( "
                 + "  `uuid` binary(16) NOT NULL PRIMARY KEY , "
-                + "  `guild_id` int(11) NOT NULL, "
+                + "  `island_id` int(11) NOT NULL, "
                 + "  `role` varchar(16) NOT NULL,"
                 + " FOREIGN KEY (uuid) REFERENCES user(uuid),"
-                + " FOREIGN KEY (guild_id) REFERENCES guild(id)"
+                + " FOREIGN KEY (island_id) REFERENCES island(id)"
+                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+
+        String invites = ""
+                + "CREATE TABLE IF NOT EXISTS `invites` ( "
+                + "  `id` int(11) NOT NULL PRIMARY KEY , "
+                + "  `fromPlayer` BINARY(11) NOT NULL, "
+                + "  `toPlayer` BINARY(16) NOT NULL,"
+                + " FOREIGN KEY (fromPlayer) REFERENCES user(uuid),"
+                + " FOREIGN KEY (toPlayer) REFERENCES user(uuid) "
                 + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
 
 
         try (Connection connection = DataSource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(guild);
+            PreparedStatement statement = connection.prepareStatement(island);
             statement.execute();
             statement = connection.prepareStatement(user);
             statement.execute();
-            statement = connection.prepareStatement(guildMember);
+            statement = connection.prepareStatement(islandMember);
+            statement.execute();
+            statement = connection.prepareStatement(invites);
             statement.execute();
 
         }
